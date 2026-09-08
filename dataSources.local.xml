@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="IU-262.9437.185">
+    <data-source name="portafolio_academico@localhost" uuid="4967d043-82ca-4289-b537-4828a66bcfe1">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MYSQL" />
+      <auth-provider>no-auth</auth-provider>
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+  </component>
+</project>

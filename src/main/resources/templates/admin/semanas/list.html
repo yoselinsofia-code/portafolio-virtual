@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Semanas · Portafolio Académico</title>
+    <th:block th:replace="~{layout/admin :: styles}"></th:block>
+</head>
+<body>
+<div class="app-layout">
+
+    <div th:replace="~{layout/admin :: sidebar(activePage='semanas')}"></div>
+
+    <main class="main-content">
+        <div th:replace="~{layout/admin :: topbar(titulo='Gestión de semanas', subtitulo='Organiza tu portafolio por semanas académicas')}"></div>
+
+        <div class="alert-custom alert-exito" th:if="${exito}" th:text="${exito}"></div>
+
+        <div style="display:flex; justify-content:flex-end; margin-bottom:22px;">
+            <a th:href="@{/admin/semanas/nueva}" class="btn-elegante btn-primario">
+                <i class="fa-solid fa-plus"></i> Nueva semana
+            </a>
+        </div>
+
+        <div th:if="${#lists.isEmpty(semanas)}" class="empty-state panel">
+            <i class="fa-solid fa-calendar-xmark"></i>
+            <p>Todavía no has creado ninguna semana. ¡Empieza agregando la primera!</p>
+        </div>
+
+        <div class="semanas-grid" th:unless="${#lists.isEmpty(semanas)}">
+            <div class="semana-card" th:each="semana : ${semanas}">
+                <div class="semana-cover">
+                    <img th:if="${semana.imagenPortada != null}" th:src="@{'/uploads/' + ${semana.imagenPortada}}" alt=""/>
+                    <span class="semana-numero" th:text="'SEMANA ' + ${#numbers.formatInteger(semana.numeroSemana, 2)}">Semana</span>
+                </div>
+                <div class="semana-body">
+                    <h4 th:text="${semana.titulo}">Título</h4>
+                    <p th:text="${#strings.abbreviate(semana.descripcion ?: 'Sin descripción', 90)}">Descripción</p>
+                    <div class="semana-meta">
+                        <span><i class="fa-solid fa-list"></i> <span th:text="${semana.totalActividades}">0</span> actividades</span>
+                        <span class="badge-estado" th:classappend="${semana.estado.name() == 'PUBLICADO'} ? 'badge-publicado' : 'badge-pendiente'" th:text="${semana.estado.etiqueta}">Estado</span>
+                    </div>
+                </div>
+                <div style="padding: 0 20px 20px; display:flex; gap:8px;">
+                    <a th:href="@{/admin/semanas/{id}(id=${semana.id})}" class="btn-elegante btn-secundario" style="flex:1; justify-content:center;"><i class="fa-solid fa-eye"></i> Ver</a>
+                    <a th:href="@{/admin/semanas/{id}/editar(id=${semana.id})}" class="btn-icono btn-secundario"><i class="fa-solid fa-pen"></i></a>
+                    <form th:action="@{/admin/semanas/{id}/estado(id=${semana.id})}" method="post" style="display:contents;">
+                        <button type="submit" class="btn-icono btn-dorado" title="Publicar/despublicar"><i class="fa-solid fa-toggle-on"></i></button>
+                    </form>
+                    <form th:action="@{/admin/semanas/{id}/eliminar(id=${semana.id})}" method="post" class="confirmar-eliminar" data-mensaje="¿Eliminar esta semana y todas sus actividades?" style="display:contents;">
+                        <button type="submit" class="btn-icono btn-peligro"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<th:block th:replace="~{layout/admin :: scripts}"></th:block>
+</body>
+</html>

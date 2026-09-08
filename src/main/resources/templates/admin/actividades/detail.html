@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title th:text="${actividad.titulo} + ' · Portafolio Académico'">Actividad</title>
+    <th:block th:replace="~{layout/admin :: styles}"></th:block>
+</head>
+<body>
+<div class="app-layout">
+
+    <div th:replace="~{layout/admin :: sidebar(activePage='semanas')}"></div>
+
+    <main class="main-content">
+        <div th:replace="~{layout/admin :: topbar(titulo=${actividad.titulo}, subtitulo='Semana ' + ${actividad.semana.numeroSemana} + ' — ' + ${actividad.semana.titulo})}"></div>
+
+        <div class="breadcrumb-elegante">
+            <a th:href="@{/admin/semanas}">Semanas</a> <i class="fa-solid fa-chevron-right" style="font-size:.7rem;"></i>
+            <a th:href="@{/admin/semanas/{id}(id=${actividad.semana.id})}" th:text="'Semana ' + ${actividad.semana.numeroSemana}">Semana</a>
+            <i class="fa-solid fa-chevron-right" style="font-size:.7rem;"></i>
+            <span th:text="${actividad.titulo}">Actividad</span>
+        </div>
+
+        <div class="panel" style="max-width:820px;">
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
+                <span class="tipo-pill" th:text="${actividad.tipoActividad.etiqueta}">Tipo</span>
+                <span class="badge-estado" th:classappend="${actividad.estado.name() == 'PUBLICADO'} ? 'badge-publicado' : 'badge-pendiente'" th:text="${actividad.estado.etiqueta}">Estado</span>
+                <span style="font-size:.82rem; color:var(--gris-suave);" th:if="${actividad.fecha != null}">
+                    <i class="fa-regular fa-calendar"></i> <span th:text="${actividad.fecha}"></span>
+                </span>
+            </div>
+
+            <img th:if="${actividad.imagen != null}" th:src="@{'/uploads/' + ${actividad.imagen}}"
+                 style="width:100%; max-height:280px; object-fit:cover; border-radius:16px; margin-bottom:20px; box-shadow:var(--sombra-suave);" alt=""/>
+
+            <p style="line-height:1.7;" th:text="${actividad.descripcion}">Descripción</p>
+
+            <div th:if="${actividad.codigoJava != null and !actividad.codigoJava.isEmpty()}" class="codigo-java-box" style="margin-top:20px;">
+                <label>Código Java</label>
+                <textarea readonly th:text="${actividad.codigoJava}" style="min-height:220px;"></textarea>
+            </div>
+
+            <div style="display:flex; gap:12px; margin-top:22px; flex-wrap:wrap;">
+                <a th:if="${actividad.enlaceExterno != null and !actividad.enlaceExterno.isEmpty()}" th:href="${actividad.enlaceExterno}" target="_blank" class="btn-elegante btn-secundario">
+                    <i class="fa-solid fa-up-right-from-square"></i> Enlace externo
+                </a>
+                <a th:if="${actividad.archivoPdf != null}" th:href="@{'/uploads/' + ${actividad.archivoPdf}}" target="_blank" class="btn-elegante btn-secundario">
+                    <i class="fa-solid fa-file-pdf"></i> Ver PDF
+                </a>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/admin/semanas/{id}(id=${actividad.semana.id})}" class="btn-elegante btn-secundario">Volver a la semana</a>
+                <a th:href="@{/admin/actividades/{id}/editar(id=${actividad.id})}" class="btn-elegante btn-primario"><i class="fa-solid fa-pen"></i> Editar</a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<th:block th:replace="~{layout/admin :: scripts}"></th:block>
+</body>
+</html>

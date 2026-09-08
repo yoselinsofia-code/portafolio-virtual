@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head>
+    <title>Panel del Docente · Portafolio Académico</title>
+    <th:block th:replace="~{layout/docente :: styles}"></th:block>
+</head>
+<body>
+<div class="app-layout">
+
+    <div th:replace="~{layout/docente :: sidebar(activePage='dashboard')}"></div>
+
+    <main class="main-content">
+        <div th:replace="~{layout/docente :: topbar(titulo='Panel del Docente', subtitulo='Revisión del progreso académico del estudiante')}"></div>
+
+        <div class="stats-grid">
+            <div class="stat-card c1" style="--i:0">
+                <div class="stat-icon"><i class="fa-solid fa-calendar-week"></i></div>
+                <span class="stat-value" th:text="${totalSemanas}">0</span>
+                <div class="stat-label">Semanas</div>
+                <div class="stat-trend"><i class="fa-solid fa-circle-check" style="color:var(--exito);"></i> <span th:text="${semanasPublicadas} + ' publicadas'">0 publicadas</span></div>
+            </div>
+            <div class="stat-card c2" style="--i:1">
+                <div class="stat-icon"><i class="fa-solid fa-list-check"></i></div>
+                <span class="stat-value" th:text="${totalActividades}">0</span>
+                <div class="stat-label">Actividades</div>
+                <div class="stat-trend"><i class="fa-solid fa-hourglass-half" style="color:var(--pendiente);"></i> <span th:text="${actividadesPendientes} + ' pendientes'">0 pendientes</span></div>
+            </div>
+            <div class="stat-card c3" style="--i:2">
+                <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                <span class="stat-value" th:text="${actividadesPublicadas}">0</span>
+                <div class="stat-label">Publicadas</div>
+                <div class="stat-trend"><i class="fa-solid fa-eye" style="color:var(--info);"></i> Visibles en el portafolio</div>
+            </div>
+            <div class="stat-card c4" style="--i:3">
+                <div class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+                <span class="stat-value" th:text="${actividadesPendientes}">0</span>
+                <div class="stat-label">Pendientes</div>
+                <div class="stat-trend"><i class="fa-solid fa-pen" style="color:var(--rosa-intenso);"></i> Aún por publicar</div>
+            </div>
+        </div>
+
+        <div class="resumen-grid">
+            <div class="resumen-card">
+                <div class="dona-progreso"
+                     th:style="'--pct:' + ${totalActividades > 0 ? T(java.lang.Math).round(actividadesPublicadas * 100.0 / totalActividades) : 0} + '; --dona-color: var(--rosa-intenso);'">
+                    <span th:text="${totalActividades > 0 ? T(java.lang.Math).round(actividadesPublicadas * 100.0 / totalActividades) : 0} + '%'">0%</span>
+                </div>
+                <div class="resumen-info">
+                    <h4>Progreso de actividades</h4>
+                    <p th:text="${actividadesPublicadas} + ' de ' + ${totalActividades} + ' actividades publicadas'">0 de 0 publicadas</p>
+                    <div class="resumen-leyenda">
+                        <span><i class="punto-leyenda" style="background:var(--rosa-intenso);"></i> Publicadas</span>
+                        <span><i class="punto-leyenda" style="background:var(--rosa-palo-suave);"></i> Pendientes</span>
+                    </div>
+                </div>
+            </div>
+            <div class="resumen-card">
+                <div class="dona-progreso"
+                     th:style="'--pct:' + ${totalSemanas > 0 ? T(java.lang.Math).round(semanasPublicadas * 100.0 / totalSemanas) : 0} + '; --dona-color: var(--lila);'">
+                    <span th:text="${totalSemanas > 0 ? T(java.lang.Math).round(semanasPublicadas * 100.0 / totalSemanas) : 0} + '%'">0%</span>
+                </div>
+                <div class="resumen-info">
+                    <h4>Progreso de semanas</h4>
+                    <p th:text="${semanasPublicadas} + ' de ' + ${totalSemanas} + ' semanas publicadas'">0 de 0 publicadas</p>
+                    <div class="resumen-leyenda">
+                        <span><i class="punto-leyenda" style="background:var(--lila);"></i> Publicadas</span>
+                        <span><i class="punto-leyenda" style="background:var(--rosa-palo-suave);"></i> Pendientes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <h3><i class="fa-solid fa-calendar-days"></i> Semanas del portafolio</h3>
+            </div>
+            <div th:if="${#lists.isEmpty(semanas)}" class="empty-state">
+                <i class="fa-solid fa-calendar-xmark"></i>
+                <p>El estudiante todavía no ha registrado ninguna semana.</p>
+            </div>
+            <div class="semanas-grid" th:unless="${#lists.isEmpty(semanas)}">
+                <div class="semana-card" th:each="semana : ${semanas}">
+                    <div class="semana-cover">
+                        <img th:if="${semana.imagenPortada != null}" th:src="@{'/uploads/' + ${semana.imagenPortada}}" alt=""/>
+                        <span class="semana-numero" th:text="'SEMANA ' + ${#numbers.formatInteger(semana.numeroSemana, 2)}">Semana</span>
+                    </div>
+                    <div class="semana-body">
+                        <h4 th:text="${semana.titulo}">Título</h4>
+                        <p th:text="${#strings.abbreviate(semana.descripcion ?: '', 90)}">Descripción</p>
+                        <div class="semana-meta">
+                            <span><i class="fa-solid fa-list"></i> <span th:text="${semana.totalActividades}">0</span> actividades</span>
+                            <span class="badge-estado" th:classappend="${semana.estado.name() == 'PUBLICADO'} ? 'badge-publicado' : 'badge-pendiente'" th:text="${semana.estado.etiqueta}">Estado</span>
+                        </div>
+                    </div>
+                    <div class="semana-body" style="padding-top:0;">
+                        <a th:href="@{/docente/semanas/{id}(id=${semana.id})}" class="btn-elegante btn-secundario" style="width:100%; justify-content:center;"><i class="fa-solid fa-eye"></i> Revisar semana</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <h3><i class="fa-solid fa-list-check"></i> Últimas actividades</h3>
+            </div>
+            <div th:if="${#lists.isEmpty(ultimasActividades)}" class="empty-state">
+                <i class="fa-solid fa-inbox"></i>
+                <p>Aún no hay actividades registradas.</p>
+            </div>
+            <div th:each="actividad, iter : ${ultimasActividades}" th:with="tipoNombre=${actividad.tipoActividad.name()},
+                 acento=(${tipoNombre == 'EJERCICIO'} ? 'tipo-acento-1' :
+                        (${tipoNombre == 'TAREA'} ? 'tipo-acento-2' :
+                        (${tipoNombre == 'PROYECTO'} ? 'tipo-acento-3' :
+                        (${tipoNombre == 'INVESTIGACION'} ? 'tipo-acento-4' :
+                        (${tipoNombre == 'PRACTICA'} ? 'tipo-acento-5' :
+                        (${tipoNombre == 'EXAMEN'} ? 'tipo-acento-6' : 'tipo-acento-7'))))))">
+                <a th:href="@{/docente/actividades/{id}(id=${actividad.id})}" class="mini-list-item" th:style="'--i:' + ${iter.index}">
+                    <div class="mini-thumb" th:classappend="${actividad.imagen == null} ? ${acento} : ''"
+                         th:style="${actividad.imagen == null} ? 'color:#fff;' : ''">
+                        <img th:if="${actividad.imagen != null}" th:src="@{'/uploads/' + ${actividad.imagen}}" alt=""/>
+                        <span th:if="${actividad.imagen == null}" th:switch="${tipoNombre}">
+                            <i th:case="'EJERCICIO'" class="fa-solid fa-pen-ruler"></i>
+                            <i th:case="'TAREA'" class="fa-solid fa-clipboard-list"></i>
+                            <i th:case="'PROYECTO'" class="fa-solid fa-diagram-project"></i>
+                            <i th:case="'INVESTIGACION'" class="fa-solid fa-magnifying-glass"></i>
+                            <i th:case="'PRACTICA'" class="fa-solid fa-flask"></i>
+                            <i th:case="'EXAMEN'" class="fa-solid fa-file-signature"></i>
+                            <i th:case="*" class="fa-solid fa-camera-retro"></i>
+                        </span>
+                    </div>
+                    <div class="mini-info">
+                        <strong th:text="${actividad.titulo}">Actividad</strong>
+                        <div class="mini-meta">
+                            <span class="estado-punto" th:classappend="${actividad.estado.name() == 'PUBLICADO'} ? 'pto-publicado' : 'pto-pendiente'"></span>
+                            <span class="mini-estado-txt" th:text="${actividad.tipoActividad.etiqueta} + ' · ' + ${actividad.estado.etiqueta}">Tipo</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right mini-arrow"></i>
+                </a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<th:block th:replace="~{layout/docente :: scripts}"></th:block>
+</body>
+</html>

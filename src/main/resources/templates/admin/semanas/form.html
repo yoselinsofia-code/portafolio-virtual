@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title th:text="${semana.id == null ? 'Nueva semana' : 'Editar semana'} + ' · Portafolio Académico'">Semana</title>
+    <th:block th:replace="~{layout/admin :: styles}"></th:block>
+</head>
+<body>
+<div class="app-layout">
+
+    <div th:replace="~{layout/admin :: sidebar(activePage='semanas')}"></div>
+
+    <main class="main-content">
+        <div th:replace="~{layout/admin :: topbar(titulo=${semana.id == null ? 'Nueva semana' : 'Editar semana'}, subtitulo='Completa la información de la semana académica')}"></div>
+
+        <div class="breadcrumb-elegante">
+            <a th:href="@{/admin/semanas}">Semanas</a> <i class="fa-solid fa-chevron-right" style="font-size:.7rem;"></i>
+            <span th:text="${semana.id == null ? 'Nueva' : 'Editar'}">Nueva</span>
+        </div>
+
+        <div class="panel" style="max-width:760px;">
+            <form th:action="@{/admin/semanas/guardar}" th:object="${semana}" method="post" enctype="multipart/form-data" class="form-elegante">
+                <input type="hidden" th:field="*{id}"/>
+
+                <div class="form-row">
+                    <div>
+                        <label>Número de semana *</label>
+                        <input type="number" th:field="*{numeroSemana}" min="1" required placeholder="Ej: 1"/>
+                    </div>
+                    <div>
+                        <label>Fecha</label>
+                        <input type="date" th:field="*{fecha}"/>
+                    </div>
+                </div>
+
+                <label>Título *</label>
+                <input type="text" th:field="*{titulo}" required placeholder="Ej: Estructuras secuenciales"/>
+
+                <label>Descripción</label>
+                <textarea th:field="*{descripcion}" placeholder="Describe brevemente el contenido de esta semana..."></textarea>
+
+                <div class="form-row">
+                    <div>
+                        <label>Estado</label>
+                        <select th:field="*{estado}">
+                            <option value="PENDIENTE">Pendiente</option>
+                            <option value="PUBLICADO">Publicado</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Orden de visualización</label>
+                        <input type="number" th:field="*{ordenVisualizacion}" min="0" placeholder="0"/>
+                    </div>
+                </div>
+
+                <label>Imagen de portada</label>
+                <div class="form-file-drop" onclick="document.getElementById('archivoImagen').click();">
+                    <i class="fa-solid fa-image"></i>
+                    <span class="drop-label">Haz clic para subir una imagen (JPG, PNG)</span>
+                    <input type="file" id="archivoImagen" name="archivoImagen" accept="image/*"/>
+                </div>
+                <div class="current-image-preview" th:if="${semana.imagenPortada != null}">
+                    <img th:src="@{'/uploads/' + ${semana.imagenPortada}}" alt=""/>
+                    <span>Imagen actual (se reemplazará si subes una nueva)</span>
+                </div>
+
+                <div class="form-actions">
+                    <a th:href="@{/admin/semanas}" class="btn-elegante btn-secundario">Cancelar</a>
+                    <button type="submit" class="btn-elegante btn-primario"><i class="fa-solid fa-floppy-disk"></i> Guardar semana</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+<th:block th:replace="~{layout/admin :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,65 @@
+/* ==========================================================
+   PALETA DE DISEÑO — Elegante, femenina, profesional
+   Rosa palo · Lila · Lavanda · Blanco · Contraste oscuro · Dorado sutil
+   ========================================================== */
+:root {
+  /* Rosas y lilas */
+  --rosa-palo: #eec9d2;
+  --rosa-palo-suave: #f7e3e7;
+  --rosa-intenso: #d98ba0;
+  --lila: #c9a8d8;
+  --lavanda: #b8a9e0;
+  --lavanda-suave: #ece6fb;
+
+  /* Neutros */
+  --blanco: #ffffff;
+  --blanco-hueso: #fbf8fb;
+  --gris-texto: #5c5468;
+  --gris-suave: #948b9e;
+
+  /* Oscuro de contraste (headers, sidebar, texto fuerte) */
+  --oscuro-1: #2c2438;
+  --oscuro-2: #3d3250;
+  --oscuro-3: #4a3d61;
+
+  /* Dorado sutil */
+  --dorado: #cba36b;
+  --dorado-suave: #e7d4b0;
+
+  /* Estados */
+  --exito: #7fb894;
+  --pendiente: #e0a85f;
+  --peligro: #d9758a;
+  --info: #8fb3d9;
+
+  /* Superficies / sombras */
+  --radio-lg: 22px;
+  --radio-md: 16px;
+  --radio-sm: 10px;
+  --sombra-suave: 0 10px 30px rgba(90, 60, 110, 0.10);
+  --sombra-media: 0 16px 40px rgba(90, 60, 110, 0.16);
+  --sombra-fuerte: 0 20px 50px rgba(44, 36, 56, 0.28);
+
+  --gradiente-principal: linear-gradient(135deg, var(--lila) 0%, var(--lavanda) 50%, var(--rosa-intenso) 100%);
+  --gradiente-suave: linear-gradient(135deg, var(--rosa-palo-suave) 0%, var(--lavanda-suave) 100%);
+  --gradiente-oscuro: linear-gradient(180deg, var(--oscuro-1) 0%, var(--oscuro-2) 100%);
+  --gradiente-dorado: linear-gradient(135deg, var(--dorado) 0%, var(--dorado-suave) 100%);
+
+  /* Realce / interacciones */
+  --sombra-glow: 0 8px 26px rgba(201, 168, 216, 0.45);
+  --anillo-foco: 0 0 0 4px rgba(184, 169, 224, 0.22);
+  --transicion-suave: .3s cubic-bezier(.4, 0, .2, 1);
+  --transicion-rapida: .18s ease;
+
+  /* Acentos por tipo de actividad (coherentes con la paleta) */
+  --acento-1: #c9a8d8; /* lila */
+  --acento-2: #d98ba0; /* rosa intenso */
+  --acento-3: #b8a9e0; /* lavanda */
+  --acento-4: #cba36b; /* dorado */
+  --acento-5: #7fb894; /* verde salvia */
+  --acento-6: #8fb3d9; /* azul polvo */
+  --acento-7: #e0a85f; /* ambar */
+
+  --fuente-titulos: 'Playfair Display', Georgia, serif;
+  --fuente-texto: 'Poppins', 'Segoe UI', sans-serif;
+}

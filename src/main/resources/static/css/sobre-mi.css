@@ -1,0 +1,269 @@
+/* =========================================================
+   SOBRE MÍ - PORTAFOLIO ACADÉMICO
+   (Tema claro, coherente con la paleta rosa / lila / lavanda)
+   ========================================================= */
+
+.sobre-mi-page { min-height: 100vh; }
+
+@keyframes fadeInUpPublico {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.sobre-mi-header {
+  position: relative;
+  padding: 100px 0 80px;
+  overflow: hidden;
+  text-align: center;
+  background: var(--gradiente-suave);
+}
+
+.sobre-mi-header::before {
+  content: "";
+  position: absolute;
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  top: -220px; right: -120px;
+  background: rgba(201, 168, 216, 0.28);
+  pointer-events: none;
+}
+
+.sobre-mi-header::after {
+  content: "";
+  position: absolute;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  bottom: -180px; left: -100px;
+  background: rgba(217, 139, 160, 0.22);
+  pointer-events: none;
+}
+
+.sobre-mi-header .contenedor { position: relative; z-index: 2; }
+.sobre-mi-header .eyebrow { display: inline-block; margin-bottom: 15px; }
+
+.sobre-mi-header h1 {
+  margin: 0;
+  font-size: clamp(2.6rem, 6vw, 4.4rem);
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--oscuro-1);
+}
+
+.sobre-mi-header p {
+  max-width: 650px;
+  margin: 18px auto 0;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--gris-texto);
+}
+
+/* =========================================================
+   INFORMACIÓN PRINCIPAL
+   ========================================================= */
+.sobre-mi-info { padding: 80px 0; }
+
+.sobre-mi-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: 70px;
+  align-items: center;
+}
+
+/* =========================================================
+   FOTO
+   ========================================================= */
+.sobre-mi-foto { display: flex; justify-content: center; }
+
+.perfil-card {
+  position: relative;
+  width: 320px; height: 380px;
+  border-radius: 26px;
+  overflow: hidden;
+  background: var(--gradiente-principal);
+  box-shadow: var(--sombra-fuerte);
+  transform: rotate(-2deg);
+  transition: transform .4s cubic-bezier(.4,0,.2,1), box-shadow .4s ease;
+  animation: fadeInUpPublico .6s ease both;
+}
+
+.perfil-card:hover {
+  transform: rotate(0deg) translateY(-8px);
+  box-shadow: 0 30px 60px rgba(90, 60, 110, 0.28);
+}
+
+.perfil-card::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  border-radius: 18px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.perfil-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.perfil-placeholder {
+  width: 100%; height: 100%;
+  display: flex; justify-content: center; align-items: center;
+  font-size: 7rem; font-weight: 700; color: white;
+  font-family: var(--fuente-titulos);
+}
+.perfil-placeholder span { opacity: .85; }
+
+/* =========================================================
+   TEXTO
+   ========================================================= */
+.sobre-mi-contenido { max-width: 700px; animation: fadeInUpPublico .6s ease .1s both; }
+.sobre-mi-contenido .eyebrow { display: inline-block; margin-bottom: 12px; }
+
+.sobre-mi-contenido h2 {
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+  line-height: 1.2;
+  margin: 0 0 22px;
+  letter-spacing: -.5px;
+}
+.sobre-mi-contenido h2 span { color: var(--rosa-intenso); position: relative; }
+
+.sobre-mi-contenido > p {
+  font-size: 1.02rem;
+  line-height: 1.85;
+  color: var(--gris-texto);
+  margin-bottom: 32px;
+}
+
+/* =========================================================
+   DATOS PERSONALES
+   ========================================================= */
+.datos-personales {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.dato-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--blanco);
+  border: 1px solid rgba(201, 168, 216, 0.25);
+  box-shadow: var(--sombra-suave);
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+
+.dato-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-glow);
+  border-color: var(--rosa-palo);
+}
+
+.dato-item > i {
+  width: 44px; height: 44px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 12px;
+  background: var(--gradiente-suave);
+  color: var(--rosa-intenso);
+  font-size: 1rem;
+}
+
+.dato-item div { min-width: 0; }
+.dato-item span {
+  display: block;
+  font-size: .74rem;
+  color: var(--gris-suave);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.dato-item strong {
+  display: block;
+  font-size: .92rem;
+  line-height: 1.4;
+  color: var(--oscuro-1);
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   HABILIDADES
+   ========================================================= */
+.habilidades-section { padding: 90px 0; }
+.habilidades-section .section-header { text-align: center; margin-bottom: 50px; }
+.habilidades-section .section-header p { max-width: 620px; margin-left: auto; margin-right: auto; }
+
+.habilidades-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.habilidad-card {
+  position: relative;
+  padding: 32px 22px;
+  border-radius: 22px;
+  text-align: center;
+  background: var(--blanco);
+  border: 1px solid rgba(201, 168, 216, 0.2);
+  box-shadow: var(--sombra-suave);
+  overflow: hidden;
+  transition: transform .35s cubic-bezier(.4,0,.2,1), box-shadow .35s ease;
+  animation: fadeInUpPublico .55s ease both;
+}
+
+.habilidad-card::before {
+  content: "";
+  position: absolute;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  top: -50px; right: -50px;
+  background: var(--gradiente-suave);
+  transition: transform .5s ease;
+}
+.habilidad-card:hover::before { transform: scale(1.3) rotate(20deg); }
+
+.habilidad-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--sombra-glow);
+}
+
+.habilidad-card > i {
+  font-size: 2.4rem;
+  margin-bottom: 18px;
+  display: block;
+  position: relative; z-index: 1;
+  color: var(--rosa-intenso);
+  transition: transform .3s ease;
+}
+.habilidad-card:hover > i { transform: scale(1.12) rotate(-6deg); }
+
+.habilidad-card h3 { margin: 0 0 8px; font-size: 1.08rem; position: relative; z-index: 1; }
+.habilidad-card p {
+  margin: 0; font-size: .87rem; line-height: 1.65;
+  color: var(--gris-suave);
+  position: relative; z-index: 1;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 1000px) {
+  .sobre-mi-grid { grid-template-columns: 1fr; gap: 50px; }
+  .sobre-mi-foto { order: 1; }
+  .sobre-mi-contenido { order: 2; max-width: 800px; margin: auto; text-align: center; }
+  .datos-personales { text-align: left; }
+  .habilidades-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 650px) {
+  .sobre-mi-header { padding: 70px 0 55px; }
+  .sobre-mi-info, .habilidades-section { padding: 60px 0; }
+  .perfil-card { width: 270px; height: 320px; }
+  .datos-personales { grid-template-columns: 1fr; }
+  .habilidades-grid { grid-template-columns: 1fr; }
+  .sobre-mi-contenido h2 { font-size: 1.8rem; }
+}

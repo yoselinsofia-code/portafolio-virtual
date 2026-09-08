@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title th:text="${actividad.id == null ? 'Nueva actividad' : 'Editar actividad'} + ' · Portafolio Académico'">Actividad</title>
+    <th:block th:replace="~{layout/admin :: styles}"></th:block>
+</head>
+<body>
+<div class="app-layout">
+
+    <div th:replace="~{layout/admin :: sidebar(activePage='semanas')}"></div>
+
+    <main class="main-content">
+        <div th:replace="~{layout/admin :: topbar(titulo=${actividad.id == null ? 'Nueva actividad' : 'Editar actividad'}, subtitulo='Semana ' + ${actividad.semana.numeroSemana} + ' — ' + ${actividad.semana.titulo})}"></div>
+
+        <div class="breadcrumb-elegante">
+            <a th:href="@{/admin/semanas}">Semanas</a> <i class="fa-solid fa-chevron-right" style="font-size:.7rem;"></i>
+            <a th:href="@{/admin/semanas/{id}(id=${actividad.semana.id})}" th:text="'Semana ' + ${actividad.semana.numeroSemana}">Semana</a>
+            <i class="fa-solid fa-chevron-right" style="font-size:.7rem;"></i>
+            <span th:text="${actividad.id == null ? 'Nueva actividad' : 'Editar actividad'}">Actividad</span>
+        </div>
+
+        <div class="panel" style="max-width:820px;">
+            <form th:action="@{/admin/actividades/guardar}" th:object="${actividad}" method="post" enctype="multipart/form-data" class="form-elegante">
+                <input type="hidden" th:field="*{id}"/>
+                <input type="hidden" name="semana" th:value="${actividad.semana.id}"/>
+
+                <label>Título *</label>
+                <input type="text" th:field="*{titulo}" required placeholder="Ej: Ejercicio de bucles for"/>
+
+                <label>Descripción</label>
+                <textarea th:field="*{descripcion}" placeholder="Describe en qué consiste la actividad..."></textarea>
+
+                <div class="form-row">
+                    <div>
+                        <label>Tipo de actividad *</label>
+                        <select th:field="*{tipoActividad}" required>
+                            <option value="">Selecciona un tipo</option>
+                            <option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="${tipo.etiqueta}">Tipo</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Fecha</label>
+                        <input type="date" th:field="*{fecha}"/>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Estado</label>
+                        <select th:field="*{estado}">
+                            <option value="PENDIENTE">Pendiente</option>
+                            <option value="PUBLICADO">Publicado</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Orden de visualización</label>
+                        <input type="number" th:field="*{ordenVisualizacion}" min="0" placeholder="0"/>
+                    </div>
+                </div>
+
+                <label>Enlace externo</label>
+                <input type="url" th:field="*{enlaceExterno}" placeholder="https://github.com/usuario/repositorio"/>
+
+                <div class="form-row">
+                    <div>
+                        <label>Imagen</label>
+                        <div class="form-file-drop" onclick="document.getElementById('archivoImagen').click();">
+                            <i class="fa-solid fa-image"></i>
+                            <span class="drop-label">Subir imagen</span>
+                            <input type="file" id="archivoImagen" name="archivoImagen" accept="image/*"/>
+                        </div>
+                        <div class="current-image-preview" th:if="${actividad.imagen != null}">
+                            <img th:src="@{'/uploads/' + ${actividad.imagen}}" alt=""/>
+                            <span>Imagen actual</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Archivo PDF</label>
+                        <div class="form-file-drop" onclick="document.getElementById('archivoPdfUpload').click();">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span class="drop-label">Subir PDF</span>
+                            <input type="file" id="archivoPdfUpload" name="archivoPdfUpload" accept="application/pdf"/>
+                        </div>
+                        <div class="current-image-preview" th:if="${actividad.archivoPdf != null}">
+                            <i class="fa-solid fa-file-pdf" style="color:var(--peligro); font-size:1.4rem;"></i>
+                            <span>PDF actual cargado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <label>Código Java</label>
+                <div class="codigo-java-box">
+                    <textarea th:field="*{codigoJava}" placeholder="public class Main {&#10;    public static void main(String[] args) {&#10;        // tu código aquí&#10;    }&#10;}"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <a th:href="@{/admin/semanas/{id}(id=${actividad.semana.id})}" class="btn-elegante btn-secundario">Cancelar</a>
+                    <button type="submit" class="btn-elegante btn-primario"><i class="fa-solid fa-floppy-disk"></i> Guardar actividad</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+<th:block th:replace="~{layout/admin :: scripts}"></th:block>
+</body>
+</html>

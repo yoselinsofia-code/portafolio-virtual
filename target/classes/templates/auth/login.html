@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Iniciar sesión · Portafolio Académico</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/public.css}"/>
+    <style>
+        body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--gradiente-suave); }
+        .login-wrap { display: flex; width: 900px; max-width: 94vw; border-radius: 28px; overflow: hidden; box-shadow: var(--sombra-fuerte); }
+        .login-side { flex: 1; background: var(--gradiente-principal); color: white; padding: 50px 40px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .login-side h1 { color: white; font-size: 1.9rem; }
+        .login-side p { opacity: .9; line-height: 1.6; }
+        .login-side .deco { position: absolute; width: 180px; height: 180px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.4); bottom: -60px; right: -60px; }
+        .login-form-side { flex: 1; background: white; padding: 55px 44px; }
+        .login-form-side h2 { margin-bottom: 6px; }
+        .login-form-side p.subt { color: var(--gris-suave); margin-bottom: 28px; font-size: .9rem; }
+        .campo { margin-bottom: 18px; }
+        .campo label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: 6px; color: var(--oscuro-2); }
+        .campo input { width: 100%; padding: 13px 16px; border-radius: 12px; border: 1.5px solid #ecdfe6; background: var(--blanco-hueso); font-family: var(--fuente-texto); }
+        .campo input:focus { outline: none; border-color: var(--lavanda); box-shadow: 0 0 0 4px rgba(184,169,224,.18); }
+        .btn-login { width: 100%; padding: 14px; border: none; border-radius: 40px; background: var(--gradiente-principal); color: white; font-weight: 700; font-size: .95rem; cursor: pointer; margin-top: 10px; transition: transform .2s; }
+        .btn-login:hover { transform: translateY(-2px); }
+        .msg-alert { padding: 12px 16px; border-radius: 12px; font-size: .85rem; margin-bottom: 18px; }
+        .msg-error { background: #fbe9ec; color: #a4415a; }
+        .msg-info { background: #e8f5ec; color: #3d7d55; }
+        @media (max-width: 760px) { .login-side { display: none; } .login-wrap { width: 420px; } }
+    </style>
+</head>
+<body>
+
+<div class="login-wrap">
+    <div class="login-side">
+        <i class="fa-solid fa-graduation-cap" style="font-size:2.2rem; margin-bottom:18px;"></i>
+        <h1>Portafolio Académico<br/>de Java</h1>
+        <p>Ingresa a tu panel para gestionar semanas, actividades y tu perfil profesional.</p>
+        <div class="deco"></div>
+    </div>
+    <div class="login-form-side">
+        <h2 class="font-titulo">Bienvenida de nuevo</h2>
+        <p class="subt">Ingresa tus credenciales de administradora</p>
+
+        <div class="msg-alert msg-error" th:if="${error}" th:text="${error}"></div>
+        <div class="msg-alert msg-info" th:if="${mensaje}" th:text="${mensaje}"></div>
+
+        <form th:action="@{/admin/login}" method="post">
+            <div class="campo">
+                <label>Usuario</label>
+                <input type="text" name="username" placeholder="admin" required autofocus/>
+            </div>
+            <div class="campo">
+                <label>Contraseña</label>
+                <input type="password" name="password" placeholder="••••••••" required/>
+            </div>
+            <button type="submit" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Ingresar</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

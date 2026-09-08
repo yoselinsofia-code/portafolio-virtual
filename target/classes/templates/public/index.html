@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title th:text="(${perfil != null and perfil.nombres != null} ? ${perfil.nombres} + ' ' + (${perfil.apellidos} ?: '') : 'Mi Portafolio') + ' · Portafolio Académico de Java'">Portafolio Académico</title>
+    <meta name="description" content="Portafolio académico de Java"/>
+    <th:block th:replace="~{layout/public :: styles}"></th:block>
+</head>
+<body>
+
+<nav th:replace="~{layout/public :: navbar}"></nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero-publico" id="sobre-mi">
+    <div class="contenedor hero-content">
+        <div class="hero-avatar-wrap">
+            <div class="hero-avatar-ring"></div>
+            <img th:if="${perfil != null and perfil.fotoPerfil != null}" th:src="@{'/uploads/' + ${perfil.fotoPerfil}}" class="hero-avatar" alt="Foto de perfil"/>
+            <div th:unless="${perfil != null and perfil.fotoPerfil != null}" class="hero-avatar">
+                <span th:text="${perfil != null and perfil.nombres != null and !perfil.nombres.isEmpty() ? #strings.substring(perfil.nombres,0,1) : 'P'}">P</span>
+            </div>
+        </div>
+        <div class="hero-text">
+            <span class="eyebrow">Portafolio académico de Java</span>
+            <h1>
+                Hola, soy <span th:text="${perfil != null and perfil.nombres != null ? perfil.nombres : 'una futura ingeniera'}">Nombre</span>
+            </h1>
+            <p class="subtitulo" th:if="${perfil != null and perfil.curso != null and !perfil.curso.isEmpty()}" th:text="${perfil.curso}">Curso</p>
+            <p class="institucion" th:if="${perfil != null and (perfil.carrera != null or perfil.instituto != null)}">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span th:text="(${perfil.carrera} ?: '') + (${perfil.instituto} != null ? ' · ' + ${perfil.instituto} : '')"></span>
+            </p>
+            <p class="descripcion" th:text="${perfil != null and perfil.descripcion != null ? perfil.descripcion : 'Bienvenida a mi espacio de aprendizaje, donde comparto el progreso semana a semana de mis actividades del curso de Java.'}">
+                Descripción
+            </p>
+            <div class="social-row">
+                <a th:if="${perfil != null and perfil.github != null and !perfil.github.isEmpty()}" th:href="${perfil.github}" target="_blank" class="social-icon"><i class="fa-brands fa-github"></i></a>
+                <a th:if="${perfil != null and perfil.linkedin != null and !perfil.linkedin.isEmpty()}" th:href="${perfil.linkedin}" target="_blank" class="social-icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a th:if="${perfil != null and perfil.instagram != null and !perfil.instagram.isEmpty()}" th:href="${perfil.instagram}" target="_blank" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+                <a th:if="${perfil != null and perfil.facebook != null and !perfil.facebook.isEmpty()}" th:href="${perfil.facebook}" target="_blank" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
+                <a th:if="${perfil != null and perfil.correo != null and !perfil.correo.isEmpty()}" th:href="'mailto:' + ${perfil.correo}" class="social-icon"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+            <div class="logos-row">
+                <img th:src="@{/img/logo1.png}"
+                     alt="Logo 1"
+                     class="logo-right">
+
+                <img th:src="@{/img/logo2.png}"
+                     alt="Logo 2"
+                     class="logo-right">
+            </div>
+
+            <div class="stats-strip-publico">
+                <div class="stat-strip-item">
+                    <i class="fa-solid fa-calendar-week"></i>
+                    <div>
+                        <strong class="num-animado" th:text="${#lists.size(semanas)}">0</strong>
+                        <span>Semanas publicadas</span>
+                    </div>
+                </div>
+                <div class="stat-strip-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <div>
+                        <strong class="num-animado" th:text="${totalActividadesPublicadas}">0</strong>
+                        <span>Actividades completadas</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ===================== SEMANAS ===================== -->
+<section class="section-publica" id="semanas">
+    <div class="contenedor">
+        <div class="section-header">
+            <span class="eyebrow">Progreso académico</span>
+            <h2>Semanas del curso</h2>
+            <p>Explora cada semana para ver las actividades, ejercicios y proyectos desarrollados.</p>
+        </div>
+
+        <div th:if="${#lists.isEmpty(semanas)}" class="empty-state-publico">
+            <i class="fa-solid fa-calendar-xmark"></i>
+            <p>Aún no hay semanas publicadas. ¡Vuelve pronto!</p>
+        </div>
+
+        <div class="semanas-publico-grid" th:unless="${#lists.isEmpty(semanas)}">
+            <a th:each="semana : ${semanas}" th:href="@{/semana/{id}(id=${semana.id})}" class="semana-publica-card">
+                <div class="semana-publica-cover">
+                    <img th:if="${semana.imagenPortada != null}" th:src="@{'/uploads/' + ${semana.imagenPortada}}" alt=""/>
+                </div>
+                <div class="numero-flotante">
+                    <small>Semana</small>
+                    <strong th:text="${#numbers.formatInteger(semana.numeroSemana, 2)}">01</strong>
+                </div>
+                <div class="semana-publica-body">
+                    <h3 th:text="${semana.titulo}">Título de la semana</h3>
+                    <p th:text="${semana.descripcion != null ? #strings.abbreviate(semana.descripcion, 100) : 'Sin descripción'}">
+                        Descripción breve
+                    </p>
+                    <div class="semana-publica-footer">
+                        <span class="contador-actividades"><i class="fa-solid fa-list-check"></i> <span th:text="${semana.actividadesPublicadas}">0</span> actividades</span>
+                        <span class="link-ver-mas">Ver más <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<footer th:replace="~{layout/public :: footer}"></footer>
+<th:block th:replace="~{layout/public :: scripts}"></th:block>
+</body>
+</html>

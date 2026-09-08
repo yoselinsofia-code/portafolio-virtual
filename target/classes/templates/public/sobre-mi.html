@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Sobre mí · Portafolio Académico</title>
+
+  <meta name="description"
+        content="Conoce más sobre mí, mi formación académica, habilidades y objetivos.">
+
+  <th:block th:replace="~{layout/public :: styles}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/sobre-mi.css}">
+</head>
+
+<body>
+
+<nav th:replace="~{layout/public :: navbar}"></nav>
+
+
+<!-- ===================== SOBRE MÍ ===================== -->
+
+<main class="sobre-mi-page">
+
+  <!-- ENCABEZADO -->
+
+  <section class="sobre-mi-header">
+
+    <div class="contenedor">
+
+            <span class="eyebrow">
+                Conóceme
+            </span>
+
+      <h1>Sobre mí</h1>
+
+      <p>
+        Un poco sobre mi formación, mis intereses,
+        mis habilidades y mi camino en el mundo del desarrollo web.
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- INFORMACIÓN -->
+
+  <section class="sobre-mi-info">
+
+    <div class="contenedor">
+
+      <div class="sobre-mi-grid">
+
+        <!-- FOTO -->
+
+        <div class="sobre-mi-foto">
+
+          <div class="perfil-card">
+
+            <img th:if="${perfil != null and perfil.fotoPerfil != null}"
+                 th:src="@{'/uploads/' + ${perfil.fotoPerfil}}"
+                 alt="Foto de perfil">
+
+            <div th:unless="${perfil != null and perfil.fotoPerfil != null}"
+                 class="perfil-placeholder">
+
+                            <span th:text="${perfil != null
+                                and perfil.nombres != null
+                                and !perfil.nombres.isEmpty()
+                                ? #strings.substring(perfil.nombres,0,1)
+                                : 'P'}">
+                                P
+                            </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- INFORMACIÓN PERSONAL -->
+
+        <div class="sobre-mi-contenido">
+
+                    <span class="eyebrow">
+                        Información personal
+                    </span>
+
+          <h2>
+            Hola, soy
+            <span th:text="${perfil != null and perfil.nombres != null
+                            ? perfil.nombres
+                            : 'Mi nombre'}">
+                            Nombre
+                        </span>
+          </h2>
+
+          <p th:text="${perfil != null and perfil.descripcion != null
+                        ? perfil.descripcion
+                        : 'Soy estudiante de Diseño y Programación Web y me apasiona aprender, crear y desarrollar soluciones digitales.'}">
+            Descripción personal.
+          </p>
+
+
+          <!-- DATOS -->
+
+          <div class="datos-personales">
+
+            <div class="dato-item">
+              <i class="fa-solid fa-user"></i>
+
+              <div>
+                <span>Nombre completo</span>
+
+                <strong th:text="${perfil != null and perfil.nombres != null
+                                    ? perfil.nombres + ' ' + (perfil.apellidos ?: '')
+                                    : 'No registrado'}">
+                  Nombre
+                </strong>
+              </div>
+            </div>
+
+
+            <div class="dato-item">
+              <i class="fa-solid fa-graduation-cap"></i>
+
+              <div>
+                <span>Carrera</span>
+
+                <strong th:text="${perfil != null and perfil.carrera != null
+                                    ? perfil.carrera
+                                    : 'No registrado'}">
+                  Carrera
+                </strong>
+              </div>
+            </div>
+
+
+            <div class="dato-item">
+              <i class="fa-solid fa-school"></i>
+
+              <div>
+                <span>Institución</span>
+
+                <strong th:text="${perfil != null and perfil.instituto != null
+                                    ? perfil.instituto
+                                    : 'No registrado'}">
+                  Instituto
+                </strong>
+              </div>
+            </div>
+
+
+            <div class="dato-item">
+              <i class="fa-solid fa-book"></i>
+
+              <div>
+                <span>Curso</span>
+
+                <strong th:text="${perfil != null and perfil.curso != null
+                                    ? perfil.curso
+                                    : 'Java'}">
+                  Java
+                </strong>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- HABILIDADES -->
+
+  <section class="habilidades-section">
+
+    <div class="contenedor">
+
+      <div class="section-header">
+
+                <span class="eyebrow">
+                    Lo que estoy aprendiendo
+                </span>
+
+        <h2>Mis habilidades</h2>
+
+        <p>
+          Algunas de las tecnologías y conocimientos
+          que forman parte de mi formación.
+        </p>
+
+      </div>
+
+
+      <div class="habilidades-grid">
+
+        <div class="habilidad-card">
+          <i class="fa-brands fa-java"></i>
+          <h3>Java</h3>
+          <p>
+            Programación orientada a objetos,
+            Spring Boot y desarrollo backend.
+          </p>
+        </div>
+
+
+        <div class="habilidad-card">
+          <i class="fa-brands fa-html5"></i>
+          <h3>HTML5</h3>
+          <p>
+            Creación de estructuras y páginas web.
+          </p>
+        </div>
+
+
+        <div class="habilidad-card">
+          <i class="fa-brands fa-css3-alt"></i>
+          <h3>CSS3</h3>
+          <p>
+            Diseño de interfaces modernas,
+            responsivas y atractivas.
+          </p>
+        </div>
+
+
+        <div class="habilidad-card">
+          <i class="fa-brands fa-js"></i>
+          <h3>JavaScript</h3>
+          <p>
+            Interactividad y funcionalidades
+            dinámicas para aplicaciones web.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+</main>
+
+
+<footer th:replace="~{layout/public :: footer}"></footer>
+
+<th:block th:replace="~{layout/public :: scripts}"></th:block>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:fragment="styles">
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+        <link rel="stylesheet" th:href="@{/css/variables.css}"/>
+        <link rel="stylesheet" th:href="@{/css/public.css}"/>
+
+    </th:block>
+</head>
+<body>
+
+<nav class="navbar-publico" th:fragment="navbar">
+    <div class="contenedor">
+
+        <a th:href="@{/}" class="navbar-brand">
+            <span class="brand-dot">
+                <span th:if="${perfil != null and perfil.nombres != null and !perfil.nombres.isEmpty()}"
+                      th:text="${#strings.substring(perfil.nombres,0,1)}">P</span>
+            </span>
+
+            <span th:text="${perfil != null and perfil.nombres != null ? perfil.nombres + ' ' + (perfil.apellidos ?: '') : 'Mi Portafolio'}">
+                Mi Portafolio
+            </span>
+        </a>
+
+        <div class="navbar-links">
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/#semanas}">Semanas</a>
+            <a th:href="@{/sobre-mi}">Sobre mí</a>
+
+            <!-- LOGIN -->
+            <a th:href="@{/admin/login}"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="nav-login">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Iniciar sesión
+            </a>
+        </div>
+
+    </div>
+</nav>
+
+<footer class="footer-publico" th:fragment="footer">
+    <div class="contenedor">
+        <h3 th:text="${perfil != null and perfil.nombres != null ? perfil.nombres + ' ' + (perfil.apellidos ?: '') : 'Mi Portafolio'}">Mi Portafolio</h3>
+        <p style="max-width:480px; font-size:.88rem; margin-top:8px;"
+           th:text="${perfil != null and perfil.carrera != null ? perfil.carrera + ' · ' + (perfil.instituto ?: '') : 'Portafolio académico de Java'}">
+            Portafolio académico
+        </p>
+        <div class="social-row" style="margin-top:20px;">
+            <a th:if="${perfil != null and perfil.github != null and !perfil.github.isEmpty()}" th:href="${perfil.github}" target="_blank" class="social-icon"><i class="fa-brands fa-github"></i></a>
+            <a th:if="${perfil != null and perfil.linkedin != null and !perfil.linkedin.isEmpty()}" th:href="${perfil.linkedin}" target="_blank" class="social-icon"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a th:if="${perfil != null and perfil.instagram != null and !perfil.instagram.isEmpty()}" th:href="${perfil.instagram}" target="_blank" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+            <a th:if="${perfil != null and perfil.facebook != null and !perfil.facebook.isEmpty()}" th:href="${perfil.facebook}" target="_blank" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
+            <a th:if="${perfil != null and perfil.correo != null and !perfil.correo.isEmpty()}" th:href="'mailto:' + ${perfil.correo}" class="social-icon"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+        <div class="footer-bottom">
+            &copy; <span th:text="${#calendars.format(#calendars.createNow(), 'yyyy')}">2026</span> — Portafolio Académico de Java. Todos los derechos reservados.
+        </div>
+    </div>
+</footer>
+
+<th:block th:fragment="scripts">
+    <script th:src="@{/js/public.js}"></script>
+</th:block>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title th:text="'Semana ' + ${semana.numeroSemana} + ' · Panel del Docente'">Semana</title>
+    <th:block th:replace="~{layout/docente :: styles}"></th:block>
+</head>
+<body>
+<div class="app-layout">
+
+    <div th:replace="~{layout/docente :: sidebar(activePage='semanas')}"></div>
+
+    <main class="main-content">
+        <div th:replace="~{layout/docente :: topbar(titulo='Semana ' + ${semana.numeroSemana}, subtitulo=${semana.titulo})}"></div>
+
+        <div class="breadcrumb-elegante">
+            <a th:href="@{/docente/dashboard}">Panel del docente</a> <i class="fa-solid fa-chevron-right" style="font-size:.7rem;"></i>
+            <span th:text="'Semana ' + ${semana.numeroSemana}">Semana</span>
+        </div>
+
+        <div class="panel">
+            <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;">
+                <img th:if="${semana.imagenPortada != null}" th:src="@{'/uploads/' + ${semana.imagenPortada}}"
+                     style="width:180px; height:120px; object-fit:cover; border-radius:16px; box-shadow:var(--sombra-suave);" alt=""/>
+                <div style="flex:1; min-width:240px;">
+                    <span class="badge-estado" th:classappend="${semana.estado.name() == 'PUBLICADO'} ? 'badge-publicado' : 'badge-pendiente'" th:text="${semana.estado.etiqueta}">Estado</span>
+                    <h2 style="margin:10px 0 6px;" th:text="${semana.titulo}">Título</h2>
+                    <p style="color:var(--gris-suave);" th:text="${semana.descripcion}">Descripción</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-header" style="margin-top: 10px;">
+            <h3><i class="fa-solid fa-list-check"></i> Actividades de esta semana</h3>
+        </div>
+
+        <div th:if="${#lists.isEmpty(actividades)}" class="empty-state panel">
+            <i class="fa-solid fa-inbox"></i>
+            <p>Esta semana todavía no tiene actividades registradas.</p>
+        </div>
+
+        <div class="actividades-list" th:unless="${#lists.isEmpty(actividades)}">
+            <div class="actividad-item" th:each="actividad, iter : ${actividades}" th:style="'--i:' + ${iter.index}"
+                 th:with="tipoNombre=${actividad.tipoActividad.name()},
+                          acento=(${tipoNombre == 'EJERCICIO'} ? 'tipo-acento-1' :
+                                 (${tipoNombre == 'TAREA'} ? 'tipo-acento-2' :
+                                 (${tipoNombre == 'PROYECTO'} ? 'tipo-acento-3' :
+                                 (${tipoNombre == 'INVESTIGACION'} ? 'tipo-acento-4' :
+                                 (${tipoNombre == 'PRACTICA'} ? 'tipo-acento-5' :
+                                 (${tipoNombre == 'EXAMEN'} ? 'tipo-acento-6' : 'tipo-acento-7'))))))">
+                <div class="mini-thumb" th:classappend="${actividad.imagen == null} ? ${acento} : ''"
+                     th:style="${actividad.imagen == null} ? 'color:#fff;' : ''">
+                    <img th:if="${actividad.imagen != null}" th:src="@{'/uploads/' + ${actividad.imagen}}" alt=""/>
+                    <span th:if="${actividad.imagen == null}" th:switch="${tipoNombre}">
+                        <i th:case="'EJERCICIO'" class="fa-solid fa-pen-ruler"></i>
+                        <i th:case="'TAREA'" class="fa-solid fa-clipboard-list"></i>
+                        <i th:case="'PROYECTO'" class="fa-solid fa-diagram-project"></i>
+                        <i th:case="'INVESTIGACION'" class="fa-solid fa-magnifying-glass"></i>
+                        <i th:case="'PRACTICA'" class="fa-solid fa-flask"></i>
+                        <i th:case="'EXAMEN'" class="fa-solid fa-file-signature"></i>
+                        <i th:case="*" class="fa-solid fa-camera-retro"></i>
+                    </span>
+                </div>
+                <div style="flex:1;">
+                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                        <strong th:text="${actividad.titulo}">Título</strong>
+                        <span class="tipo-pill" th:text="${actividad.tipoActividad.etiqueta}">Tipo</span>
+                        <span class="badge-estado" th:classappend="${actividad.estado.name() == 'PUBLICADO'} ? 'badge-publicado' : 'badge-pendiente'" th:text="${actividad.estado.etiqueta}">Estado</span>
+                    </div>
+                    <p style="margin:6px 0 0; font-size:.85rem; color:var(--gris-suave);" th:text="${#strings.abbreviate(actividad.descripcion ?: '', 110)}">Descripción</p>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <a th:href="@{/docente/actividades/{id}(id=${actividad.id})}" class="btn-icono btn-secundario" title="Ver detalle"><i class="fa-solid fa-eye"></i></a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<th:block th:replace="~{layout/docente :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title th:text="'Semana ' + ${semana.numeroSemana} + ' · Portafolio Académico'">Semana</title>
+    <th:block th:replace="~{layout/admin :: styles}"></th:block>
+</head>
+<body>
+<div class="app-layout">
+
+    <div th:replace="~{layout/admin :: sidebar(activePage='semanas')}"></div>
+
+    <main class="main-content">
+        <div th:replace="~{layout/admin :: topbar(titulo='Semana ' + ${semana.numeroSemana}, subtitulo=${semana.titulo})}"></div>
+
+        <div class="alert-custom alert-exito" th:if="${exito}" th:text="${exito}"></div>
+
+        <div class="breadcrumb-elegante">
+            <a th:href="@{/admin/semanas}">Semanas</a> <i class="fa-solid fa-chevron-right" style="font-size:.7rem;"></i>
+            <span th:text="'Semana ' + ${semana.numeroSemana}">Semana</span>
+        </div>
+
+        <div class="panel">
+            <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;">
+                <img th:if="${semana.imagenPortada != null}" th:src="@{'/uploads/' + ${semana.imagenPortada}}"
+                     style="width:180px; height:120px; object-fit:cover; border-radius:16px; box-shadow:var(--sombra-suave);" alt=""/>
+                <div style="flex:1; min-width:240px;">
+                    <span class="badge-estado" th:classappend="${semana.estado.name() == 'PUBLICADO'} ? 'badge-publicado' : 'badge-pendiente'" th:text="${semana.estado.etiqueta}">Estado</span>
+                    <h2 style="margin:10px 0 6px;" th:text="${semana.titulo}">Título</h2>
+                    <p style="color:var(--gris-suave);" th:text="${semana.descripcion}">Descripción</p>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <a th:href="@{/admin/semanas/{id}/editar(id=${semana.id})}" class="btn-elegante btn-secundario"><i class="fa-solid fa-pen"></i> Editar</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-header" style="margin-top: 10px;">
+            <h3><i class="fa-solid fa-list-check"></i> Actividades de esta semana</h3>
+            <a th:href="@{/admin/actividades/nueva(semanaId=${semana.id})}" class="btn-elegante btn-primario">
+                <i class="fa-solid fa-plus"></i> Agregar actividad
+            </a>
+        </div>
+
+        <div th:if="${#lists.isEmpty(actividades)}" class="empty-state panel">
+            <i class="fa-solid fa-inbox"></i>
+            <p>Esta semana todavía no tiene actividades registradas.</p>
+        </div>
+
+        <div class="actividades-list" th:unless="${#lists.isEmpty(actividades)}">
+            <div class="actividad-item" th:each="actividad : ${actividades}">
+                <div class="mini-thumb">
+                    <img th:if="${actividad.imagen != null}" th:src="@{'/uploads/' + ${actividad.imagen}}" alt=""/>
+                    <i th:unless="${actividad.imagen != null}" class="fa-solid fa-code"></i>
+                </div>
+                <div style="flex:1;">
+                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                        <strong th:text="${actividad.titulo}">Título</strong>
+                        <span class="tipo-pill" th:text="${actividad.tipoActividad.etiqueta}">Tipo</span>
+                        <span class="badge-estado" th:classappend="${actividad.estado.name() == 'PUBLICADO'} ? 'badge-publicado' : 'badge-pendiente'" th:text="${actividad.estado.etiqueta}">Estado</span>
+                    </div>
+                    <p style="margin:6px 0 0; font-size:.85rem; color:var(--gris-suave);" th:text="${#strings.abbreviate(actividad.descripcion ?: '', 110)}">Descripción</p>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <a th:href="@{/admin/actividades/{id}(id=${actividad.id})}" class="btn-icono btn-secundario"><i class="fa-solid fa-eye"></i></a>
+                    <a th:href="@{/admin/actividades/{id}/editar(id=${actividad.id})}" class="btn-icono btn-secundario"><i class="fa-solid fa-pen"></i></a>
+                    <form th:action="@{/admin/actividades/{id}/estado(id=${actividad.id})}" method="post" style="display:contents;">
+                        <button type="submit" class="btn-icono btn-dorado" title="Publicar/despublicar"><i class="fa-solid fa-toggle-on"></i></button>
+                    </form>
+                    <form th:action="@{/admin/actividades/{id}/eliminar(id=${actividad.id})}" method="post" class="confirmar-eliminar" data-mensaje="¿Eliminar esta actividad?" style="display:contents;">
+                        <button type="submit" class="btn-icono btn-peligro"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<th:block th:replace="~{layout/admin :: scripts}"></th:block>
+</body>
+</html>

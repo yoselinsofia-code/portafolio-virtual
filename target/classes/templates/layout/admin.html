@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!--/* Fragmento: hojas de estilo comunes del dashboard */-->
+    <th:block th:fragment="styles">
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+        <link rel="stylesheet" th:href="@{/css/variables.css}"/>
+        <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+    </th:block>
+</head>
+<body>
+
+<!--/* Fragmento: barra lateral de navegacion del dashboard */-->
+<div th:fragment="sidebar(activePage)">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="avatar-mini">
+                <img th:if="${perfilSidebar != null and perfilSidebar.fotoPerfil != null}"
+                     th:src="@{'/uploads/' + ${perfilSidebar.fotoPerfil}}" alt="Foto"/>
+                <span th:unless="${perfilSidebar != null and perfilSidebar.fotoPerfil != null}">P</span>
+            </div>
+            <div>
+                <h2>Mi Portafolio</h2>
+                <span>Panel Academico</span>
+            </div>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li><a th:href="@{/admin/dashboard}" th:classappend="${activePage == 'dashboard'} ? 'active'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+            <li><a th:href="@{/admin/semanas}" th:classappend="${activePage == 'semanas'} ? 'active'"><i class="fa-solid fa-calendar-week"></i> Semanas</a></li>
+            <li><a th:href="@{/admin/semanas}" th:classappend="${activePage == 'actividades'} ? 'active'"><i class="fa-solid fa-list-check"></i> Actividades</a></li>
+            <li><a th:href="@{/admin/perfil}" th:classappend="${activePage == 'perfil'} ? 'active'"><i class="fa-solid fa-user-pen"></i> Perfil</a></li>
+            <li><a th:href="@{/}" target="_blank"><i class="fa-solid fa-globe"></i> Ver Portafolio</a></li>
+            <div class="nav-divider"></div>
+        </ul>
+
+        <div class="sidebar-footer-logout">
+            <form th:action="@{/admin/logout}" method="post">
+                <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+</div>
+
+<!--/* Fragmento: barra superior con titulo de pagina y usuario */-->
+<div th:fragment="topbar(titulo, subtitulo)" class="topbar">
+    <button class="hamburger-btn" id="hamburgerBtn"><i class="fa-solid fa-bars"></i></button>
+    <div class="titulo-pagina">
+        <h1 th:text="${titulo}">Título</h1>
+        <p th:text="${subtitulo}">Subtítulo</p>
+    </div>
+    <div class="topbar-user">
+        <div class="avatar-mini-2">
+            <img th:if="${perfilSidebar != null and perfilSidebar.fotoPerfil != null}" th:src="@{'/uploads/' + ${perfilSidebar.fotoPerfil}}" alt=""/>
+            <span th:unless="${perfilSidebar != null and perfilSidebar.fotoPerfil != null}">A</span>
+        </div>
+        <span sec:authentication="name">admin</span>
+    </div>
+</div>
+
+<!--/* Fragmento: scripts comunes */-->
+<th:block th:fragment="scripts">
+    <script th:src="@{/js/admin.js}"></script>
+</th:block>
+
+</body>
+</html>

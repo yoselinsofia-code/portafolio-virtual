@@ -1,0 +1,48 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: portafolio-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: portafolio_academico
+      MYSQL_ROOT_PASSWORD: root
+      TZ: America/Lima
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: portafolio-app
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/portafolio_academico?useSSL=false&serverTimezone=America/Lima&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      APP_UPLOAD_DIR: /app/uploads
+      APP_ADMIN_DEFAULT_USERNAME: admin
+      APP_ADMIN_DEFAULT_PASSWORD: admin123
+      APP_ADMIN_DEFAULT_EMAIL: admin@portafolio.com
+      APP_DOCENTE_DEFAULT_USERNAME: docente
+      APP_DOCENTE_DEFAULT_PASSWORD: docente123
+      APP_DOCENTE_DEFAULT_EMAIL: docente@portafolio.com
+      TZ: America/Lima
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads_data:/app/uploads
+
+volumes:
+  mysql_data:
+  uploads_data:

@@ -35,14 +35,47 @@ public class ActividadService {
                 .orElseThrow(() -> new IllegalArgumentException("Actividad no encontrada con id " + id));
     }
 
+
     @Transactional
-    public Actividad guardar(Actividad actividad, MultipartFile imagen, MultipartFile archivoPdf) {
+    public Actividad guardar(Actividad actividad,
+                             MultipartFile imagen,
+                             MultipartFile archivoPdf) {
+
+        // Si estamos editando una actividad existente
+        if (actividad.getId() != null) {
+
+            Actividad existente = obtenerPorId(actividad.getId());
+
+            // Conservar la imagen anterior
+            actividad.setImagen(existente.getImagen());
+
+            // Conservar el PDF anterior
+            actividad.setArchivoPdf(existente.getArchivoPdf());
+        }
+
+        // Subir nueva imagen si el usuario seleccionó una
         if (imagen != null && !imagen.isEmpty()) {
-            actividad.setImagen(fileStorageService.store(imagen, "actividades/imagenes"));
+
+            String urlImagen = fileStorageService.store(
+                    imagen,
+                    "actividades/imagenes"
+            );
+
+            actividad.setImagen(urlImagen);
         }
+
+        // Subir nuevo PDF si el usuario seleccionó uno
         if (archivoPdf != null && !archivoPdf.isEmpty()) {
-            actividad.setArchivoPdf(fileStorageService.store(archivoPdf, "actividades/pdf"));
+
+            String urlPdf = fileStorageService.store(
+                    archivoPdf,
+                    "actividades/pdf"
+            );
+
+            actividad.setArchivoPdf(urlPdf);
         }
+
+        // Guardar la actividad en MySQL
         return actividadRepository.save(actividad);
     }
 

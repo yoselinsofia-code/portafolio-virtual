@@ -53,33 +53,41 @@
 
       <div class="sobre-mi-grid">
 
+
         <!-- FOTO -->
 
         <div class="sobre-mi-foto">
 
           <div class="perfil-card">
 
-            <img th:if="${perfil != null and perfil.fotoPerfil != null}"
-                 th:src="@{'/uploads/' + ${perfil.fotoPerfil}}"
+            <!-- Mostrar imagen de Cloudinary o imagen antigua -->
+            <img th:if="${perfil != null
+                     and perfil.fotoPerfil != null
+                     and !perfil.fotoPerfil.isEmpty()}"
+                 th:src="${#strings.startsWith(perfil.fotoPerfil, 'https://')
+                        ? perfil.fotoPerfil
+                        : '/uploads/' + perfil.fotoPerfil}"
                  alt="Foto de perfil">
 
-            <div th:unless="${perfil != null and perfil.fotoPerfil != null}"
+            <!-- Mostrar inicial cuando no existe fotografía -->
+            <div th:unless="${perfil != null
+                         and perfil.fotoPerfil != null
+                         and !perfil.fotoPerfil.isEmpty()}"
                  class="perfil-placeholder">
 
-                            <span th:text="${perfil != null
-                                and perfil.nombres != null
-                                and !perfil.nombres.isEmpty()
-                                ? #strings.substring(perfil.nombres,0,1)
-                                : 'P'}">
-                                P
-                            </span>
+            <span th:text="${perfil != null
+                            and perfil.nombres != null
+                            and !perfil.nombres.isEmpty()
+                            ? #strings.substring(perfil.nombres, 0, 1)
+                            : 'P'}">
+                P
+            </span>
 
             </div>
 
           </div>
 
         </div>
-
 
         <!-- INFORMACIÓN PERSONAL -->
 

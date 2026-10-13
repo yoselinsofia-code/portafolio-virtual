@@ -12,12 +12,37 @@
 <!-- ===================== HERO ===================== -->
 <header class="hero-publico" id="sobre-mi">
     <div class="contenedor hero-content">
+
         <div class="hero-avatar-wrap">
+
             <div class="hero-avatar-ring"></div>
-            <img th:if="${perfil != null and perfil.fotoPerfil != null}" th:src="@{'/uploads/' + ${perfil.fotoPerfil}}" class="hero-avatar" alt="Foto de perfil"/>
-            <div th:unless="${perfil != null and perfil.fotoPerfil != null}" class="hero-avatar">
-                <span th:text="${perfil != null and perfil.nombres != null and !perfil.nombres.isEmpty() ? #strings.substring(perfil.nombres,0,1) : 'P'}">P</span>
+
+            <!-- Fotografía de perfil desde Cloudinary -->
+            <img th:if="${perfil != null
+                 and perfil.fotoPerfil != null
+                 and !perfil.fotoPerfil.isEmpty()}"
+                 th:src="${#strings.startsWith(perfil.fotoPerfil, 'https://')
+                    ? perfil.fotoPerfil
+                    : '/uploads/' + perfil.fotoPerfil}"
+                 class="hero-avatar"
+                 alt="Foto de perfil"/>
+
+            <!-- Inicial cuando no existe fotografía -->
+            <div th:unless="${perfil != null
+                     and perfil.fotoPerfil != null
+                     and !perfil.fotoPerfil.isEmpty()}"
+                 class="hero-avatar">
+
+        <span th:text="${perfil != null
+                        and perfil.nombres != null
+                        and !perfil.nombres.isEmpty()
+                        ? #strings.substring(perfil.nombres,0,1)
+                        : 'P'}">
+            P
+        </span>
+
             </div>
+
         </div>
         <div class="hero-text">
             <span class="eyebrow">Portafolio académico de Java</span>
@@ -85,8 +110,17 @@
 
         <div class="semanas-publico-grid" th:unless="${#lists.isEmpty(semanas)}">
             <a th:each="semana : ${semanas}" th:href="@{/semana/{id}(id=${semana.id})}" class="semana-publica-card">
+
                 <div class="semana-publica-cover">
-                    <img th:if="${semana.imagenPortada != null}" th:src="@{'/uploads/' + ${semana.imagenPortada}}" alt=""/>
+
+                    <img th:if="${semana.imagenPortada != null
+                 and !semana.imagenPortada.isEmpty()}"
+                         th:src="${#strings.startsWith(semana.imagenPortada, 'https://')
+                    ? semana.imagenPortada
+                    : '/uploads/' + semana.imagenPortada}"
+                         alt="Portada de la semana"
+                         loading="lazy"/>
+
                 </div>
                 <div class="numero-flotante">
                     <small>Semana</small>

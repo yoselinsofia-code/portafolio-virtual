@@ -18,10 +18,23 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
+
             <div class="avatar-mini">
-                <img th:if="${perfilSidebar != null and perfilSidebar.fotoPerfil != null}"
-                     th:src="@{'/uploads/' + ${perfilSidebar.fotoPerfil}}" alt="Foto"/>
-                <span th:unless="${perfilSidebar != null and perfilSidebar.fotoPerfil != null}">P</span>
+
+                <img th:if="${perfilSidebar != null
+                 and perfilSidebar.fotoPerfil != null
+                 and !perfilSidebar.fotoPerfil.isEmpty()}"
+                     th:src="${#strings.startsWith(perfilSidebar.fotoPerfil, 'https://')
+                    ? perfilSidebar.fotoPerfil
+                    : '/uploads/' + perfilSidebar.fotoPerfil}"
+                     alt="Foto de perfil"/>
+
+                <span th:unless="${perfilSidebar != null
+                      and perfilSidebar.fotoPerfil != null
+                      and !perfilSidebar.fotoPerfil.isEmpty()}">
+        P
+    </span>
+
             </div>
             <div>
                 <h2>Mi Portafolio</h2>
@@ -54,9 +67,23 @@
         <p th:text="${subtitulo}">Subtítulo</p>
     </div>
     <div class="topbar-user">
+
         <div class="avatar-mini-2">
-            <img th:if="${perfilSidebar != null and perfilSidebar.fotoPerfil != null}" th:src="@{'/uploads/' + ${perfilSidebar.fotoPerfil}}" alt=""/>
-            <span th:unless="${perfilSidebar != null and perfilSidebar.fotoPerfil != null}">A</span>
+
+            <img th:if="${perfilSidebar != null
+                 and perfilSidebar.fotoPerfil != null
+                 and !perfilSidebar.fotoPerfil.isEmpty()}"
+                 th:src="${#strings.startsWith(perfilSidebar.fotoPerfil, 'https://')
+                    ? perfilSidebar.fotoPerfil
+                    : '/uploads/' + perfilSidebar.fotoPerfil}"
+                 alt="Foto de perfil"/>
+
+            <span th:unless="${perfilSidebar != null
+                      and perfilSidebar.fotoPerfil != null
+                      and !perfilSidebar.fotoPerfil.isEmpty()}">
+        A
+    </span>
+
         </div>
         <span sec:authentication="name">admin</span>
     </div>

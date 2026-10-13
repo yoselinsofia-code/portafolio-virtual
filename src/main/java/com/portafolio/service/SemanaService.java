@@ -57,12 +57,24 @@ public class SemanaService {
         semana.setEstado(semanaForm.getEstado());
         semana.setOrdenVisualizacion(semanaForm.getOrdenVisualizacion());
 
+
         if (imagenPortada != null && !imagenPortada.isEmpty()) {
-            if (semana.getImagenPortada() != null) {
-                fileStorageService.delete(semana.getImagenPortada());
-            }
-            String ruta = fileStorageService.store(imagenPortada, "semanas");
-            semana.setImagenPortada(ruta);
+
+            // Guardar referencia a la portada anterior
+            String imagenAnterior = semana.getImagenPortada();
+
+            // Primero subir la nueva portada a Cloudinary
+            String nuevaImagen = fileStorageService.store(
+                    imagenPortada,
+                    "semanas"
+            );
+
+            // Actualizar la URL de la portada
+            semana.setImagenPortada(nuevaImagen);
+
+            // La eliminación de la imagen anterior se debe gestionar
+            // después de confirmar el guardado, si se implementa
+            // la eliminación real de archivos en Cloudinary.
         }
         // Si no se sube una nueva imagen, semana.getImagenPortada() conserva la existente.
 

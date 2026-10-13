@@ -69,9 +69,18 @@
                             <span class="drop-label">Subir imagen</span>
                             <input type="file" id="archivoImagen" name="archivoImagen" accept="image/*"/>
                         </div>
-                        <div class="current-image-preview" th:if="${actividad.imagen != null}">
-                            <img th:src="@{'/uploads/' + ${actividad.imagen}}" alt=""/>
+
+                        <div class="current-image-preview"
+                             th:if="${actividad.imagen != null and !actividad.imagen.isEmpty()}">
+
+                            <img th:src="${#strings.startsWith(actividad.imagen, 'https://')
+                    ? actividad.imagen
+                    : '/uploads/' + actividad.imagen}"
+                                 alt="Imagen de la actividad"
+                                 style="max-width:180px; border-radius:10px;"/>
+
                             <span>Imagen actual</span>
+
                         </div>
                     </div>
                     <div>
@@ -81,9 +90,29 @@
                             <span class="drop-label">Subir PDF</span>
                             <input type="file" id="archivoPdfUpload" name="archivoPdfUpload" accept="application/pdf"/>
                         </div>
-                        <div class="current-image-preview" th:if="${actividad.archivoPdf != null}">
-                            <i class="fa-solid fa-file-pdf" style="color:var(--peligro); font-size:1.4rem;"></i>
+
+                        <div class="current-image-preview"
+                             th:if="${actividad.archivoPdf != null
+              and !actividad.archivoPdf.isEmpty()}">
+
+                            <i class="fa-solid fa-file-pdf"
+                               style="color:var(--peligro); font-size:1.4rem;"></i>
+
                             <span>PDF actual cargado</span>
+
+                            <a th:href="${#strings.startsWith(actividad.archivoPdf, 'https://')
+                    ? actividad.archivoPdf
+                    : '/uploads/' + actividad.archivoPdf}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="btn-elegante btn-secundario"
+                               style="font-size:.8rem; padding:7px 12px;">
+
+                                <i class="fa-solid fa-eye"></i>
+                                Ver PDF
+
+                            </a>
+
                         </div>
                     </div>
                 </div>

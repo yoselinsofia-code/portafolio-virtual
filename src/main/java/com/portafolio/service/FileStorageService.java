@@ -1,76 +1,104 @@
+
 package com.portafolio.service;
 
-import jakarta.annotation.PostConstruct;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.util.Map;
 import java.util.UUID;
 
-/**
- * Servicio encargado de almacenar archivos subidos (imagenes, PDFs) en disco,
- * fuera del classpath, para que puedan servirse como recursos estaticos.
- */
 @Service
 public class FileStorageService {
 
-    @Value("${app.upload.dir}")
-    private String uploadDir;
+    private final Cloudinary cloudinary;
 
-    private Path rootLocation;
+    public FileStorageService(
+            @Value("${CLOUDINARY_CLOUD_NAME}") String cloudName,
+            @Value("${CLOUDINARY_API_KEY}") String apiKey,
+            @Value("${CLOUDINARY_API_SECRET}") String apiSecret) {
 
-    @PostConstruct
-    public void init() {
-        rootLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
-        try {
-            Files.createDirectories(rootLocation);
-        } catch (IOException e) {
-            throw new RuntimeException("No se pudo inicializar el directorio de subida de archivos", e);
-        }
+        cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", cloudName,
+                "api_key", apiKey,
+                "api_secret", apiSecret,
+                "secure", true
+        ));
     }
 
-    /**
-     * Guarda el archivo y devuelve el nombre unico generado (para persistir en BD).
-     * Devuelve null si el archivo esta vacio.
-     */
     public String store(MultipartFile file, String subfolder) {
+
         if (file == null || file.isEmpty()) {
             return null;
         }
+
         try {
-            String original = StringUtils.cleanPath(file.getOriginalFilename() == null ? "archivo" : file.getOriginalFilename());
+            // Obtener nombre original
+            String original = file.getOriginalFilename();
+
+            // Obtener extensión
             String extension = "";
-            int dot = original.lastIndexOf('.');
-            if (dot >= 0) {
-                extension = original.substring(dot);
+
+            if (original != null && original.contains(".")) {
+                extension = original.substring(
+                        original.lastIndexOf(".")
+                ).toLowerCase();
             }
-            String filename = UUID.randomUUID() + extension;
 
-            Path folder = rootLocation.resolve(subfolder);
-            Files.createDirectories(folder);
+            // Detectar archivos PDF
+            boolean esPdf = extension.equals(".pdf");
 
-            Path destination = folder.resolve(filename).normalize().toAbsolutePath();
-            Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+            // Cloudinary: PDF como raw, fotos como image
+            String tipo = esPdf ? "raw" : "image";
 
-            return subfolder + "/" + filename;
+            // Generar nombre único
+            String nombre = UUID.randomUUID().toString();
+
+            // Los archivos raw deben conservar su extensión
+            if (esPdf) {
+                nombre += ".pdf";
+            }
+
+            // Subir a Cloudinary
+            Map<?, ?> resultado = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "folder", "portafolio/" + subfolder,
+                            "public_id", nombre,
+                            "resource_type", tipo
+                    )
+            );
+
+            // Devolver URL segura
+            Object url = resultado.get("secure_url");
+
+            if (url == null) {
+                throw new RuntimeException(
+                        "Cloudinary no devolvió una URL segura."
+                );
+            }
+
+            return url.toString();
+
         } catch (IOException e) {
-            throw new RuntimeException("Error al guardar el archivo: " + e.getMessage(), e);
+            throw new RuntimeException(
+                    "Error al subir archivo a Cloudinary: "
+                            + e.getMessage(), e
+            );
         }
     }
 
     public void delete(String relativePath) {
-        if (relativePath == null || relativePath.isBlank()) return;
-        try {
-            Path file = rootLocation.resolve(relativePath).normalize();
-            Files.deleteIfExists(file);
-        } catch (IOException ignored) {
-            // No es critico si falla el borrado de un archivo huerfano
+
+        if (relativePath == null || relativePath.isBlank()) {
+            return;
         }
+
+        // Por seguridad, no eliminamos archivos todavía.
+        // Se implementará cuando configuremos
+        // la eliminación mediante public_id.
     }
 }

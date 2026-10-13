@@ -33,9 +33,14 @@
                 <i class="fa-regular fa-calendar"></i> <span th:text="${actividad.fecha}"></span>
             </p>
 
-            <img th:if="${actividad.imagen != null}" th:src="@{'/uploads/' + ${actividad.imagen}}"
-                 style="width:100%; max-height:340px; object-fit:cover; border-radius:18px; margin-bottom:22px; box-shadow:var(--sombra-media);" alt=""/>
 
+            <img th:if="${actividad.imagen != null and !actividad.imagen.isEmpty()}"
+                 th:src="${#strings.startsWith(actividad.imagen, 'https://')
+                ? actividad.imagen
+                : '/uploads/' + actividad.imagen}"
+                 style="width:100%; max-height:340px; object-fit:cover; border-radius:18px; margin-bottom:22px; box-shadow:var(--sombra-media);"
+                 alt="Imagen de la actividad"
+                 loading="lazy"/>
             <p style="line-height:1.8; color:var(--gris-texto);" th:text="${actividad.descripcion}">Descripción</p>
 
             <div th:if="${actividad.codigoJava != null and !actividad.codigoJava.isEmpty()}" class="codigo-java-publico">
@@ -47,8 +52,18 @@
                 <a th:if="${actividad.enlaceExterno != null and !actividad.enlaceExterno.isEmpty()}" th:href="${actividad.enlaceExterno}" target="_blank" class="chip-link">
                     <i class="fa-solid fa-up-right-from-square"></i> Ver enlace externo
                 </a>
-                <a th:if="${actividad.archivoPdf != null}" th:href="@{'/uploads/' + ${actividad.archivoPdf}}" target="_blank" class="chip-link">
-                    <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+
+                <a th:if="${actividad.archivoPdf != null and !actividad.archivoPdf.isEmpty()}"
+                   th:href="${#strings.startsWith(actividad.archivoPdf, 'https://')
+                ? actividad.archivoPdf
+                : '/uploads/' + actividad.archivoPdf}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="chip-link">
+
+                    <i class="fa-solid fa-file-pdf"></i>
+                    Ver PDF
+
                 </a>
             </div>
 

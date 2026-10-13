@@ -16,8 +16,19 @@
 
         <div class="perfil-header-card">
             <div class="perfil-avatar-grande">
-                <img th:if="${perfil.fotoPerfil != null}" th:src="@{'/uploads/' + ${perfil.fotoPerfil}}" alt=""/>
-                <span th:unless="${perfil.fotoPerfil != null}" th:text="${perfil.nombres != null and !perfil.nombres.isEmpty() ? #strings.substring(perfil.nombres,0,1) : 'P'}">P</span>
+
+                <img th:if="${perfil.fotoPerfil != null and !perfil.fotoPerfil.isEmpty()}"
+                     th:src="${#strings.startsWith(perfil.fotoPerfil, 'https://')
+                    ? perfil.fotoPerfil
+                    : '/uploads/' + perfil.fotoPerfil}"
+                     alt="Foto de perfil"
+                     style="width:100%; height:100%; object-fit:cover; border-radius:50%;"/>
+
+                <span th:unless="${perfil.fotoPerfil != null and !perfil.fotoPerfil.isEmpty()}"
+                      th:text="${perfil.nombres != null and !perfil.nombres.isEmpty()
+                    ? #strings.substring(perfil.nombres,0,1)
+                    : 'P'}">P</span>
+
             </div>
             <div>
                 <h2 style="color:white; margin:0 0 6px;" th:text="(${perfil.nombres} ?: 'Mi') + ' ' + (${perfil.apellidos} ?: 'Nombre')">Nombre</h2>

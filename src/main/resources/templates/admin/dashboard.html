@@ -83,9 +83,22 @@
                 </div>
                 <div th:each="semana, iter : ${ultimasSemanas}">
                     <a th:href="@{/admin/semanas/{id}(id=${semana.id})}" class="mini-list-item" th:style="'--i:' + ${iter.index}">
+
                         <div class="mini-thumb">
-                            <img th:if="${semana.imagenPortada != null}" th:src="@{'/uploads/' + ${semana.imagenPortada}}" alt=""/>
-                            <i th:unless="${semana.imagenPortada != null}" class="fa-solid fa-book"></i>
+
+                            <!-- Portada de la semana -->
+                            <img th:if="${semana.imagenPortada != null
+                 and !semana.imagenPortada.isEmpty()}"
+                                 th:src="${#strings.startsWith(semana.imagenPortada, 'https://')
+                    ? semana.imagenPortada
+                    : '/uploads/' + semana.imagenPortada}"
+                                 alt="Portada de la semana"/>
+
+                            <!-- Icono cuando no hay imagen -->
+                            <i th:unless="${semana.imagenPortada != null
+                   and !semana.imagenPortada.isEmpty()}"
+                               class="fa-solid fa-book"></i>
+
                         </div>
                         <div class="mini-info">
                             <strong th:text="'Semana ' + ${semana.numeroSemana} + ' · ' + ${semana.titulo}">Semana</strong>
@@ -115,18 +128,47 @@
                             (${tipoNombre == 'PRACTICA'} ? 'tipo-acento-5' :
                             (${tipoNombre == 'EXAMEN'} ? 'tipo-acento-6' : 'tipo-acento-7'))))))">
                     <a th:href="@{/admin/actividades/{id}(id=${actividad.id})}" class="mini-list-item" th:style="'--i:' + ${iter.index}">
-                        <div class="mini-thumb" th:classappend="${actividad.imagen == null} ? ${acento} : ''"
-                             th:style="${actividad.imagen == null} ? 'color:#fff;' : ''">
-                            <img th:if="${actividad.imagen != null}" th:src="@{'/uploads/' + ${actividad.imagen}}" alt=""/>
-                            <span th:if="${actividad.imagen == null}" th:switch="${tipoNombre}">
-                                <i th:case="'EJERCICIO'" class="fa-solid fa-pen-ruler"></i>
-                                <i th:case="'TAREA'" class="fa-solid fa-clipboard-list"></i>
-                                <i th:case="'PROYECTO'" class="fa-solid fa-diagram-project"></i>
-                                <i th:case="'INVESTIGACION'" class="fa-solid fa-magnifying-glass"></i>
-                                <i th:case="'PRACTICA'" class="fa-solid fa-flask"></i>
-                                <i th:case="'EXAMEN'" class="fa-solid fa-file-signature"></i>
-                                <i th:case="*" class="fa-solid fa-camera-retro"></i>
-                            </span>
+
+                        <div class="mini-thumb"
+                             th:with="tieneImagen=${actividad.imagen != null
+                            and !actividad.imagen.isEmpty()}"
+                             th:classappend="${!tieneImagen} ? ${acento} : ''"
+                             th:style="${!tieneImagen} ? 'color:#fff;' : ''">
+
+                            <!-- Imagen de la actividad desde Cloudinary -->
+                            <img th:if="${tieneImagen}"
+                                 th:src="${#strings.startsWith(actividad.imagen, 'https://')
+                    ? actividad.imagen
+                    : '/uploads/' + actividad.imagen}"
+                                 alt="Imagen de la actividad"/>
+
+                            <!-- Iconos cuando no hay imagen -->
+                            <span th:unless="${tieneImagen}"
+                                  th:switch="${tipoNombre}">
+
+        <i th:case="'EJERCICIO'"
+           class="fa-solid fa-pen-ruler"></i>
+
+        <i th:case="'TAREA'"
+           class="fa-solid fa-clipboard-list"></i>
+
+        <i th:case="'PROYECTO'"
+           class="fa-solid fa-diagram-project"></i>
+
+        <i th:case="'INVESTIGACION'"
+           class="fa-solid fa-magnifying-glass"></i>
+
+        <i th:case="'PRACTICA'"
+           class="fa-solid fa-flask"></i>
+
+        <i th:case="'EXAMEN'"
+           class="fa-solid fa-file-signature"></i>
+
+        <i th:case="*"
+           class="fa-solid fa-camera-retro"></i>
+
+    </span>
+
                         </div>
                         <div class="mini-info">
                             <strong th:text="${actividad.titulo}">Actividad</strong>

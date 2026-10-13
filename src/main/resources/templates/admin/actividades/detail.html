@@ -28,8 +28,13 @@
                 </span>
             </div>
 
-            <img th:if="${actividad.imagen != null}" th:src="@{'/uploads/' + ${actividad.imagen}}"
-                 style="width:100%; max-height:280px; object-fit:cover; border-radius:16px; margin-bottom:20px; box-shadow:var(--sombra-suave);" alt=""/>
+
+            <img th:if="${actividad.imagen != null and !actividad.imagen.isEmpty()}"
+                 th:src="${#strings.startsWith(actividad.imagen, 'https://')
+                ? actividad.imagen
+                : '/uploads/' + actividad.imagen}"
+                 style="width:100%; max-height:280px; object-fit:cover; border-radius:16px; margin-bottom:20px; box-shadow:var(--sombra-suave);"
+                 alt="Imagen de la actividad"/>
 
             <p style="line-height:1.7;" th:text="${actividad.descripcion}">Descripción</p>
 
@@ -42,8 +47,18 @@
                 <a th:if="${actividad.enlaceExterno != null and !actividad.enlaceExterno.isEmpty()}" th:href="${actividad.enlaceExterno}" target="_blank" class="btn-elegante btn-secundario">
                     <i class="fa-solid fa-up-right-from-square"></i> Enlace externo
                 </a>
-                <a th:if="${actividad.archivoPdf != null}" th:href="@{'/uploads/' + ${actividad.archivoPdf}}" target="_blank" class="btn-elegante btn-secundario">
-                    <i class="fa-solid fa-file-pdf"></i> Ver PDF
+
+                <a th:if="${actividad.archivoPdf != null and !actividad.archivoPdf.isEmpty()}"
+                   th:href="${#strings.startsWith(actividad.archivoPdf, 'https://')
+                ? actividad.archivoPdf
+                : '/uploads/' + actividad.archivoPdf}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="btn-elegante btn-secundario">
+
+                    <i class="fa-solid fa-file-pdf"></i>
+                    Ver PDF
+
                 </a>
             </div>
 

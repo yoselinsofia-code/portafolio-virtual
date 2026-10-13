@@ -27,9 +27,24 @@
 
         <div class="semanas-grid" th:unless="${#lists.isEmpty(semanas)}">
             <div class="semana-card" th:each="semana : ${semanas}">
+
                 <div class="semana-cover">
-                    <img th:if="${semana.imagenPortada != null}" th:src="@{'/uploads/' + ${semana.imagenPortada}}" alt=""/>
-                    <span class="semana-numero" th:text="'SEMANA ' + ${#numbers.formatInteger(semana.numeroSemana, 2)}">Semana</span>
+
+                    <!-- Imagen de portada desde Cloudinary -->
+                    <img th:if="${semana.imagenPortada != null
+                 and !semana.imagenPortada.isEmpty()}"
+                         th:src="${#strings.startsWith(semana.imagenPortada, 'https://')
+                    ? semana.imagenPortada
+                    : '/uploads/' + semana.imagenPortada}"
+                         alt="Portada de la semana"
+                         loading="lazy"/>
+
+                    <!-- Número de semana -->
+                    <span class="semana-numero"
+                          th:text="'SEMANA ' + ${#numbers.formatInteger(semana.numeroSemana, 2)}">
+        Semana
+    </span>
+
                 </div>
                 <div class="semana-body">
                     <h4 th:text="${semana.titulo}">Título</h4>

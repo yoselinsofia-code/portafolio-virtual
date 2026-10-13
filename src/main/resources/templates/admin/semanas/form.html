@@ -58,9 +58,21 @@
                     <span class="drop-label">Haz clic para subir una imagen (JPG, PNG)</span>
                     <input type="file" id="archivoImagen" name="archivoImagen" accept="image/*"/>
                 </div>
-                <div class="current-image-preview" th:if="${semana.imagenPortada != null}">
-                    <img th:src="@{'/uploads/' + ${semana.imagenPortada}}" alt=""/>
-                    <span>Imagen actual (se reemplazará si subes una nueva)</span>
+
+                <div class="current-image-preview"
+                     th:if="${semana.imagenPortada != null
+              and !semana.imagenPortada.isEmpty()}">
+
+                    <img th:src="${#strings.startsWith(semana.imagenPortada, 'https://')
+                    ? semana.imagenPortada
+                    : '/uploads/' + semana.imagenPortada}"
+                         alt="Imagen de portada de la semana"
+                         style="max-width:180px; border-radius:10px;"/>
+
+                    <span>
+        Imagen actual (se reemplazará si subes una nueva)
+    </span>
+
                 </div>
 
                 <div class="form-actions">

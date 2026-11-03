@@ -2,7 +2,7 @@
 
 Sistema web full-stack para gestionar y mostrar automáticamente un portafolio académico de Java, compuesto por un **Dashboard Administrativo** (CMS) y un **Portafolio Público**. Todo el contenido mostrado en el portafolio público proviene 100% de la base de datos — no hay datos estáticos ni de ejemplo.
 
-## 🛠️ Tecnologías
+## 🛠️ Tecnologías que se uso en el portafolio
 
 - Java 17
 - Spring Boot 3.3.4 (Spring MVC, Spring Data JPA, Spring Security)
